@@ -1,0 +1,62 @@
+[gd_scene load_steps=4 format=3 uid="uid://m8850lgin2x7"]
+
+[ext_resource type="Texture2D" uid="uid://dbfquq2ibsp5k" path="res://assets/information_icon.png" id="1_deh2p"]
+[ext_resource type="Script" uid="uid://d20pj68cqq7p1" path="res://_scripts/objects/notification.gd" id="1_if3b5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0rncg"]
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 5
+
+[node name="Notification" type="PanelContainer"]
+custom_minimum_size = Vector2(100, 0)
+size_flags_horizontal = 8
+theme_override_styles/panel = SubResource("StyleBoxFlat_0rncg")
+script = ExtResource("1_if3b5")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Notif_Icon" type="TextureRect" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("1_deh2p")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(6, 0)
+layout_mode = 2
+
+[node name="Notif_Text" type="Label" parent="MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Save Error: Null"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 2
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

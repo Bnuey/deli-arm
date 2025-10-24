@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://4d1pcmilao66"]
+
+[ext_resource type="Script" uid="uid://uty3a2gsoh5f" path="res://_scripts/utility/StatManagerComponent.gd" id="1_54rde"]
+[ext_resource type="Script" uid="uid://bihn54owkw2rl" path="res://_scripts/objects/player.gd" id="1_q8hb4"]
+[ext_resource type="Script" uid="uid://v11hcf0twobo" path="res://_scripts/utility/StateMachine.gd" id="2_q8hb4"]
+[ext_resource type="Script" uid="uid://ch0gcfeo2s6ru" path="res://_scripts/states/player/player_default.gd" id="3_ksjmp"]
+[ext_resource type="Script" uid="uid://c8f7jeuafp162" path="res://_scripts/states/player/player_inactive.gd" id="4_2rlf8"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sgp6g"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_q8hb4"]
+
+[node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stat_manager")]
+collision_layer = 2
+script = ExtResource("1_q8hb4")
+stat_manager = NodePath("Management/StatManager")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_sgp6g")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_q8hb4")
+
+[node name="HeadPivot" type="Node3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.5, 0)
+
+[node name="Camera3D" type="Camera3D" parent="HeadPivot"]
+unique_name_in_owner = true
+
+[node name="Management" type="Node" parent="."]
+
+[node name="StatManager" type="Node" parent="Management"]
+script = ExtResource("1_54rde")
+
+[node name="FSM" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_q8hb4")
+initial_state = NodePath("Default")
+
+[node name="Default" type="Node" parent="FSM"]
+script = ExtResource("3_ksjmp")
+
+[node name="Inactive" type="Node" parent="FSM"]
+script = ExtResource("4_2rlf8")
