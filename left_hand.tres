@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="HandInfo" load_steps=5 format=3 uid="uid://bigpw6bjj0eoa"]
+
+[ext_resource type="Script" uid="uid://dofhf5px5ysnf" path="res://_scripts/resources/hand_state_information.gd" id="1_2st7t"]
+[ext_resource type="Texture2D" uid="uid://y0oj7uy6peb" path="res://assets/Noodle_Hand_Open_Float.png" id="1_s4y4q"]
+[ext_resource type="Texture2D" uid="uid://cfo0tshkpi8oy" path="res://assets/Noodle_Hand_Closed_Float.png" id="2_00lpr"]
+[ext_resource type="Texture2D" uid="uid://dcbgbhiqyvj7w" path="res://assets/Noodle_Hand_Slap_Windup.png" id="3_s4y4q"]
+
+[resource]
+script = ExtResource("1_2st7t")
+hand_default = ExtResource("1_s4y4q")
+hand_grab = ExtResource("2_00lpr")
+hand_up = ExtResource("3_s4y4q")
+bias = 2.0
+damping = 2.0
+impulse = 2.0
+metadata/_custom_type_script = "uid://dofhf5px5ysnf"

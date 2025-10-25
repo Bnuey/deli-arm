@@ -1,19 +1,31 @@
-[gd_scene load_steps=8 format=3 uid="uid://4d1pcmilao66"]
+[gd_scene load_steps=14 format=3 uid="uid://4d1pcmilao66"]
 
 [ext_resource type="Script" uid="uid://uty3a2gsoh5f" path="res://_scripts/utility/StatManagerComponent.gd" id="1_54rde"]
 [ext_resource type="Script" uid="uid://bihn54owkw2rl" path="res://_scripts/objects/player.gd" id="1_q8hb4"]
+[ext_resource type="PackedScene" uid="uid://cvgho858eryja" path="res://scenes/objects/hand.tscn" id="2_0ay4w"]
 [ext_resource type="Script" uid="uid://v11hcf0twobo" path="res://_scripts/utility/StateMachine.gd" id="2_q8hb4"]
+[ext_resource type="Resource" uid="uid://bigpw6bjj0eoa" path="res://left_hand.tres" id="3_0ay4w"]
+[ext_resource type="Resource" uid="uid://32wk6ce7jogw" path="res://right_hand.tres" id="3_2rlf8"]
 [ext_resource type="Script" uid="uid://ch0gcfeo2s6ru" path="res://_scripts/states/player/player_default.gd" id="3_ksjmp"]
 [ext_resource type="Script" uid="uid://c8f7jeuafp162" path="res://_scripts/states/player/player_inactive.gd" id="4_2rlf8"]
+[ext_resource type="Texture2D" uid="uid://dtoucx283tg0" path="res://assets/Deli_Hand_Open.png" id="4_4c2uj"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sgp6g"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_q8hb4"]
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_0ay4w"]
+radius = 0.1
+
+[sub_resource type="BoxMesh" id="BoxMesh_0ay4w"]
+size = Vector3(0.05, 0.05, 0.05)
+
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("stat_manager")]
 collision_layer = 2
+collision_mask = 9
 script = ExtResource("1_q8hb4")
 stat_manager = NodePath("Management/StatManager")
+jump_vel = 10.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -25,12 +37,89 @@ shape = SubResource("CapsuleShape3D_sgp6g")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_q8hb4")
 
+[node name="Collision" type="Node3D" parent="."]
+
 [node name="HeadPivot" type="Node3D" parent="."]
 unique_name_in_owner = true
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.5, 0)
 
 [node name="Camera3D" type="Camera3D" parent="HeadPivot"]
 unique_name_in_owner = true
+
+[node name="LeftRaycast" type="RayCast3D" parent="HeadPivot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
+target_position = Vector3(0.5, 0, -4)
+collision_mask = 4
+
+[node name="RightRaycast" type="RayCast3D" parent="HeadPivot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
+target_position = Vector3(-0.5, 0, -2.5)
+collision_mask = 4
+
+[node name="RightGroundCast" type="RayCast3D" parent="HeadPivot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
+target_position = Vector3(-0.5, 0, -2.5)
+
+[node name="LeftHand" type="Node3D" parent="HeadPivot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -1)
+
+[node name="HandL" parent="HeadPivot/Camera3D/LeftHand" node_paths=PackedStringArray("default_point", "interact_raycast") instance=ExtResource("2_0ay4w")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
+default_point = NodePath("../HandPointL")
+print_suffix = ".L"
+interact_raycast = NodePath("../../LeftRaycast")
+hand_info = ExtResource("3_0ay4w")
+
+[node name="HandPointL" type="AnimatableBody3D" parent="HeadPivot/Camera3D/LeftHand"]
+collision_layer = 0
+collision_mask = 0
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HeadPivot/Camera3D/LeftHand/HandPointL"]
+shape = SubResource("SphereShape3D_0ay4w")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HeadPivot/Camera3D/LeftHand/HandPointL"]
+visible = false
+mesh = SubResource("BoxMesh_0ay4w")
+
+[node name="RightHand" type="Node3D" parent="HeadPivot/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, -1)
+
+[node name="HandR" parent="HeadPivot/Camera3D/RightHand" node_paths=PackedStringArray("default_point", "ground_raycast", "interact_raycast") instance=ExtResource("2_0ay4w")]
+action_name = "hand_right"
+default_point = NodePath("../HandPointR")
+print_suffix = ".R"
+ground_raycast = NodePath("../../RightGroundCast")
+interact_raycast = NodePath("../../RightRaycast")
+hand_info = ExtResource("3_2rlf8")
+
+[node name="HandSprite" parent="HeadPivot/Camera3D/RightHand/HandR/Visuals" index="2"]
+texture = ExtResource("4_4c2uj")
+
+[node name="HandPointR" type="AnimatableBody3D" parent="HeadPivot/Camera3D/RightHand"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+collision_layer = 0
+collision_mask = 0
+axis_lock_linear_x = true
+axis_lock_linear_y = true
+axis_lock_linear_z = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HeadPivot/Camera3D/RightHand/HandPointR"]
+shape = SubResource("SphereShape3D_0ay4w")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="HeadPivot/Camera3D/RightHand/HandPointR"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0, 0, 0)
+visible = false
+mesh = SubResource("BoxMesh_0ay4w")
+skeleton = NodePath("../../../LeftHand/HandPointL")
 
 [node name="Management" type="Node" parent="."]
 
@@ -46,3 +135,8 @@ script = ExtResource("3_ksjmp")
 
 [node name="Inactive" type="Node" parent="FSM"]
 script = ExtResource("4_2rlf8")
+
+[connection signal="jump_slam" from="HeadPivot/Camera3D/RightHand/HandR/FSM/Default" to="." method="do_jump"]
+
+[editable path="HeadPivot/Camera3D/LeftHand/HandL"]
+[editable path="HeadPivot/Camera3D/RightHand/HandR"]

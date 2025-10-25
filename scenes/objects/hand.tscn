@@ -1,0 +1,74 @@
+[gd_scene load_steps=11 format=3 uid="uid://cvgho858eryja"]
+
+[ext_resource type="Script" uid="uid://bring6q1ebwmd" path="res://_scripts/hand.gd" id="1_o6i87"]
+[ext_resource type="Script" uid="uid://v11hcf0twobo" path="res://_scripts/utility/StateMachine.gd" id="2_itaxb"]
+[ext_resource type="Texture2D" uid="uid://y0oj7uy6peb" path="res://assets/Noodle_Hand_Open_Float.png" id="2_rt2s2"]
+[ext_resource type="Script" uid="uid://gkhvqf0b5wf8" path="res://_scripts/components/lerp_component.gd" id="2_sf1ms"]
+[ext_resource type="Script" uid="uid://lf0uanoc32xl" path="res://_scripts/states/hands/hand_default.gd" id="3_rgf8r"]
+[ext_resource type="Script" uid="uid://mc1ox32cxuh7" path="res://_scripts/states/hands/hand_grabbing.gd" id="5_rt2s2"]
+[ext_resource type="Script" uid="uid://baspoclje2e2x" path="res://_scripts/states/hands/hand_cangrab.gd" id="6_rt2s2"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2rlf8"]
+radius = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_q8hb4"]
+radius = 0.05
+height = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_o6i87"]
+radius = 0.1
+height = 0.2
+
+[node name="Hand" type="CharacterBody3D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_o6i87")
+action_name = "hand_left"
+
+[node name="Hand_Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_2rlf8")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="Hand_Real" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.9604645e-08)
+visible = false
+mesh = SubResource("SphereMesh_q8hb4")
+skeleton = NodePath("../../../HeadPivot")
+
+[node name="Hand_Visual" type="MeshInstance3D" parent="Visuals"]
+top_level = true
+visible = false
+mesh = SubResource("SphereMesh_o6i87")
+skeleton = NodePath("../../HeadPivot")
+
+[node name="HandSprite" type="Sprite3D" parent="Visuals"]
+unique_name_in_owner = true
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+billboard = 1
+no_depth_test = true
+texture = ExtResource("2_rt2s2")
+
+[node name="Collision" type="Node3D" parent="."]
+
+[node name="Management" type="Node" parent="."]
+
+[node name="LerpComponent" type="Node" parent="Management" node_paths=PackedStringArray("display", "move_to")]
+script = ExtResource("2_sf1ms")
+display = NodePath("../../Visuals/HandSprite")
+move_to = NodePath("../../Hand_Collision")
+metadata/_custom_type_script = "uid://gkhvqf0b5wf8"
+
+[node name="FSM" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_itaxb")
+initial_state = NodePath("Default")
+
+[node name="Default" type="Node" parent="FSM"]
+script = ExtResource("3_rgf8r")
+
+[node name="CanGrab" type="Node" parent="FSM"]
+script = ExtResource("6_rt2s2")
+
+[node name="Grabbing" type="Node" parent="FSM" node_paths=PackedStringArray("joint_parent")]
+script = ExtResource("5_rt2s2")
+joint_parent = NodePath("../../Collision")

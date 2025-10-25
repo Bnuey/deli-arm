@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://ddvjukfhraxof"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_tbgi4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_tefeu"]
+
+[node name="RigidBody3D" type="RigidBody3D"]
+collision_layer = 12
+mass = 200.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_tbgi4")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Visuals"]
+mesh = SubResource("BoxMesh_tefeu")

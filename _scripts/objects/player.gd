@@ -71,8 +71,8 @@ func _physics_process(delta: float) -> void:
 	wish_dir = self.global_transform.basis * Vector3(-input_dir.x, 0, -input_dir.y)
 	
 	if is_on_floor():
-		if Input.is_action_just_pressed("jump"):
-			self.velocity.y = jump_vel
+		#if Input.is_action_just_pressed("jump"):
+			#self.velocity.y = jump_vel
 		_handle_ground_physics(delta)
 	else:
 		_handle_air_physics(delta)
@@ -86,3 +86,6 @@ func _headbob_effect(delta: float) -> void:
 		cos(headbob_time * _headbob_frequency) * _headbob_move_amount,
 		0
 		)
+
+func do_jump() -> void:
+	self.velocity.y = jump_vel

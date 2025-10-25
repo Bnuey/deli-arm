@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="HandInfo" load_steps=5 format=3 uid="uid://32wk6ce7jogw"]
+
+[ext_resource type="Texture2D" uid="uid://dtoucx283tg0" path="res://assets/Deli_Hand_Open.png" id="1_6ny72"]
+[ext_resource type="Script" uid="uid://dofhf5px5ysnf" path="res://_scripts/resources/hand_state_information.gd" id="1_xbe3l"]
+[ext_resource type="Texture2D" uid="uid://cejklr1msu5hf" path="res://assets/Deli_Hand_Closed.png" id="2_g2aiq"]
+[ext_resource type="Texture2D" uid="uid://b8bsvmfblv3pn" path="res://assets/Deli_Hand_Slap.png" id="3_6ny72"]
+
+[resource]
+script = ExtResource("1_xbe3l")
+hand_default = ExtResource("1_6ny72")
+hand_grab = ExtResource("2_g2aiq")
+hand_up = ExtResource("3_6ny72")
+bias = 0.99
+damping = 1.0
+deli_arm = true
+metadata/_custom_type_script = "uid://dofhf5px5ysnf"
